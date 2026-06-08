@@ -1,0 +1,13 @@
+kind: Application
+spring:
+  application:
+    name: conferentie
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:mysql://localhost:3306/beers
+    username: bierke
+    password: bierke
+  test:
+    database:
+      replace: none

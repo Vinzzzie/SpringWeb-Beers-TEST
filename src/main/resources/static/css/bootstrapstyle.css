@@ -1,0 +1,28 @@
+body {
+    background-color: #d6ac0b; /* Zachte, moderne achtergrondkleur */
+    color: #000000;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.custom-navbar {
+    height: 60px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+/* 2. Zorg dat de link rondom het icoon ook de volle hoogte krijgt zonder padding */
+.custom-navbar .navbar-brand {
+    height: 100%;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    display: flex;
+    align-items: center; /* Zorgt dat eventuele tekst netjes in het midden blijft */
+}
+.custom-navbar .navbar-icon {
+    height: 100%;
+    width: auto;
+    display: block;
+}
+li:hover {
+    cursor: pointer;
+    color: #215ab6;
+
+}
