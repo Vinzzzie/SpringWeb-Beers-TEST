@@ -21,12 +21,8 @@ class BierController {
     }
 
     @GetMapping("/brouwers/{brouwerID}/bieren")
-    ResponseEntity<List<String>> getBierenVoorBrouwer(@PathVariable long brouwerID) {
+    ResponseEntity<List<BierDto>> getBierenVoorBrouwer(@PathVariable long brouwerID) {
         return ResponseEntity.ok(bierService.findBierenByBrouwerId(brouwerID));
     }
 
-    @GetMapping("/bieren/{bierID}/details")
-    ResponseEntity<BierDto> getBierDetails(@PathVariable int bierID) {
-        return ResponseEntity.ok(bierService.findBierById(bierID));
-    }
 }

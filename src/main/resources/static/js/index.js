@@ -1,4 +1,5 @@
 const beersAvailable = document.getElementById('beers-available');
+const navBiermandje = document.getElementById('nav-biermandje');
 
 async function fetchAantalBieren() {
     return await fetch('/bieren/aantal', {method: 'GET'})
@@ -12,6 +13,11 @@ async function fetchAantalBieren() {
         }).catch(console.error);
 }
 
+async function biermandjeExists() {
+    return null === sessionStorage.getItem("biermandje");
+}
+
 window.onload = async () => {
     beersAvailable.textContent = await fetchAantalBieren();
+    navBiermandje.hidden = await biermandjeExists();
 }

@@ -18,18 +18,17 @@ class BestellingRepo {
         this.template = template;
     }
 
-    int insertBestelling(Bestelling bestelling) {
+    int insertBestelling(BestellingDto bestelling) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         client.sql("""
-            insert into bestellingen(id, naam, straat, huisnummer, postcode, gemeente)
-            values (?, ?, ?, ?, ?, ?);
+            insert into bestellingen(naam, straat, huisnummer, postcode, gemeente)
+            values (?, ?, ?, ?, ?);
             """).params(
-                bestelling.id(),
                 bestelling.naam(),
                 bestelling.straat(),
                 bestelling.huisnummer(),
                 bestelling.postcode(),
-                bestelling.gemeente()).update();
+                bestelling.gemeente()).update(keyHolder);
         return null==keyHolder.getKey() ? 0 : keyHolder.getKey().intValue();
     }
 

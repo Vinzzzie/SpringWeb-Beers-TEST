@@ -21,8 +21,7 @@ body {
     width: auto;
     display: block;
 }
-li:hover {
+tr:hover {
     cursor: pointer;
     color: #215ab6;
-
 }

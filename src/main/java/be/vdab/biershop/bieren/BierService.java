@@ -17,9 +17,9 @@ class BierService {
         return bierRepo.findTotaalAantal().orElse(0);
     }
 
-    List<String> findBierenByBrouwerId(long brouwerID) {
+    List<BierDto> findBierenByBrouwerId(long brouwerID) {
         return bierRepo.findBierenByBrouwerId(brouwerID)
-                .stream().map(Bier::naam).toList();
+                .stream().map(BierDto::fromBier).toList();
     }
 
     public BierDto findBierById(int id) {

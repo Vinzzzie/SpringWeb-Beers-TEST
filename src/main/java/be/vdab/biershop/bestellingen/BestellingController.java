@@ -19,7 +19,6 @@ class BestellingController {
 
     @PostMapping
     public ResponseEntity<Integer> addBestelling(@RequestBody @Valid BestellingDto bestelling) {
-        int bestellingId = bestellingService.addBestelling(bestelling);
-        return ResponseEntity.ok(bestellingId);
+        return ResponseEntity.ok(bestellingService.addBestelling(bestelling));
     }
 }

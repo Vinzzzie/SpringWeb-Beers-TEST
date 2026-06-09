@@ -17,7 +17,7 @@ class BestellingService {
 
     @Transactional
     public int addBestelling(BestellingDto dto) {
-        int bestellingId = bestellingRepo.insertBestelling(dto.bestelling());
+        int bestellingId = bestellingRepo.insertBestelling(dto);
         var bestelRijen = bestellingRepo.insertBestelLijnen(bestellingId, dto.bierIds());
         var bestelMap = bierRepo.lockBesteldeBieren(dto.bierIds());
         var bierRijen = bierRepo.updateBesteldeBieren(bestelMap);
