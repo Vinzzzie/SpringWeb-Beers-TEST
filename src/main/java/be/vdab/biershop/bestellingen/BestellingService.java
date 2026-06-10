@@ -1,7 +1,5 @@
 package be.vdab.biershop.bestellingen;
 
-import be.vdab.biershop.bestellingen.exceptions.BestellingException;
-import be.vdab.biershop.bieren.BierBestellingDto;
 import be.vdab.biershop.bieren.BierRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

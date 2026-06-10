@@ -1,7 +1,11 @@
 package be.vdab.biershop.bestellingen;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +22,13 @@ class BestellingController {
     }
 
     @PostMapping
-    public ResponseEntity<Integer> addBestelling(@RequestBody @Valid BestellingDto bestelling) {
+    ResponseEntity<Integer> addBestelling(@RequestBody @Valid @NotNull BestellingDto bestelling) {
         return ResponseEntity.ok(bestellingService.addBestelling(bestelling));
     }
+
+    @ExceptionHandler(BestellingException.class)
+    ResponseEntity<?> handleException(BestellingException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
 }
