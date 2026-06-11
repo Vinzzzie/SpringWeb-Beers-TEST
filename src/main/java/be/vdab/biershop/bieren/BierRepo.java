@@ -56,7 +56,7 @@ public class BierRepo {
                 .map(entry -> {
                     MapSqlParameterSource param = new MapSqlParameterSource();
                     param.addValue("id", entry.getKey());
-                    param.addValue("besteld", entry.getValue());
+                    param.addValue("besteld", entry.getValue()+1);
                     return param;
                 }).toArray(MapSqlParameterSource[]::new);
         return template.batchUpdate(sql, params);
