@@ -33,13 +33,6 @@ public class BierRepo {
         """).params(brouwerID).query(Bier.class).list();
     }
 
-    Optional<Bier> findDetails(int id) {
-        return client.sql("""
-            select id, naam, brouwerId, alcohol, prijs, besteld
-            from bieren where id = (?);
-        """).params(id).query(Bier.class).optional();
-    }
-
     public Map<Integer, Integer> lockBesteldeBieren(List<Integer> bierIds) {
         MapSqlParameterSource params = new MapSqlParameterSource("ids", bierIds);
         return template.query("""

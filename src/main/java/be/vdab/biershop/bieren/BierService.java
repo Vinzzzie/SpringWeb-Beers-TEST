@@ -14,18 +14,14 @@ class BierService {
     }
 
     public int findAantalBieren() {
-        return bierRepo.findTotaalAantal().orElse(0);
+        return bierRepo.findTotaalAantal()
+                .orElseThrow(() -> new BierNotFoundException("Geen bieren gevonden"));
     }
 
     List<BierDto> findBierenByBrouwerId(long brouwerID) {
-        return bierRepo.findBierenByBrouwerId(brouwerID)
-                .stream().map(BierDto::fromBier).toList();
+        List<Bier> bieren = bierRepo.findBierenByBrouwerId(brouwerID);
+        if (bieren.isEmpty()) throw new BierNotFoundException("BrouwerId heeft geen bieren");
+        return bieren.stream().map(BierDto::fromBier).toList();
     }
 
-    public BierDto findBierById(int id) {
-        return bierRepo.findDetails(id)
-                .map(BierDto::fromBier)
-                .orElseThrow(() -> new RuntimeException("Niet gevonden"));
-
-    }
 }

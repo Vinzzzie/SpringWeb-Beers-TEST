@@ -14,10 +14,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
 
@@ -33,11 +35,11 @@ import static org.mockito.Mockito.when;
 class BestellingControllerTest extends AbstractControllerTest {
 
     @Mock
-    private BestellingRepo bestellingRepo;
+    BestellingRepo bestellingRepo;
     @Autowired @InjectMocks
-    private BestellingService bestellingService;
+    BestellingService bestellingService;
 
-    public BestellingControllerTest(MockMvcTester mvc, JdbcClient jdbc) {
+    BestellingControllerTest(MockMvcTester mvc, JdbcClient jdbc) {
         super(mvc, jdbc);
     }
 
@@ -50,6 +52,9 @@ class BestellingControllerTest extends AbstractControllerTest {
                 .content(body).exchange();
         assertThat(result).isNotNull().hasStatus(HttpStatus.OK);
         assertThat(result).hasContentType(MediaType.APPLICATION_JSON);
+        assertThat(result).bodyJson().extractingPath("$")
+                .isNotEmpty().asNumber()
+                .matches(number -> JdbcTestUtils.countRowsInTableWhere(jdbc, BESTELLINGEN, "id ="+number)==1);
     }
 
     @ParameterizedTest

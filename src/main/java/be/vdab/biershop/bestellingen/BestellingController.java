@@ -25,10 +25,4 @@ class BestellingController {
     ResponseEntity<Integer> addBestelling(@RequestBody @Valid @NotNull BestellingDto bestelling) {
         return ResponseEntity.ok(bestellingService.addBestelling(bestelling));
     }
-
-    @ExceptionHandler(BestellingException.class)
-    ResponseEntity<?> handleException(BestellingException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
 }

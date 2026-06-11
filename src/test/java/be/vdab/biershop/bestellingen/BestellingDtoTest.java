@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BestellingDtoTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BestellingDtoTest.class);
+    static final Logger log = LoggerFactory.getLogger(BestellingDtoTest.class);
 
-    private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-    private final Validator validator = validatorFactory.getValidator();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    final Validator validator = validatorFactory.getValidator();
+    final ObjectMapper objectMapper = new ObjectMapper();
 
     @ParameterizedTest
     @ValueSource(strings = {

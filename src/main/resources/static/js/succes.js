@@ -9,12 +9,7 @@ async function biermandjeExists() {
 
 window.onload = async () => {
     const bestelId = sessionStorage.getItem('bestelId');
-    if (!bestelId) {
-        dangerAlert.hidden = false;
-        window.location.href = '/';
-    } else {
-        infoAlert.hidden = false;
-        bestelIdLabel.textContent = bestelId;
-    }
+    infoAlert.hidden = false;
+    bestelIdLabel.textContent = bestelId;
     navBiermandje.hidden = await biermandjeExists();
 }

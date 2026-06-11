@@ -14,7 +14,8 @@ class BrouwerService {
     }
 
     List<BrouwerDto> findAll() {
-        return brouwerRepo.findAll().stream()
-                .map(BrouwerDto::fromBrouwer).toList();
+        List<Brouwer> brouwers = brouwerRepo.findAll();
+        if (brouwers.isEmpty()) throw new BrouwersNotFoundException("Geen brouwers gevonden");
+        return brouwers.stream().map(BrouwerDto::fromBrouwer).toList();
     }
 }

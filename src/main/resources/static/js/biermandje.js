@@ -1,12 +1,12 @@
-const mandjeTabelBody = document.getElementById("mandje-tabel-body");
-const navBiermandje = document.getElementById('nav-biermandje');
+const mandjeTabelBody   = document.getElementById("mandje-tabel-body");
+const navBiermandje     = document.getElementById('nav-biermandje');
 
-const bestelFormulier= document.getElementById("bestel-formulier");
-const naamInput         = document.getElementById('naam-input').value;
-const straatInput       = document.getElementById('straat-input').value;
-const huisnummerInput   = document.getElementById('huisnummer-input').value;
-const postcodeInput     = document.getElementById('postcode-input').value;
-const gemeenteInput     = document.getElementById('gemeente-input').value;
+const bestelFormulier   = document.getElementById("bestel-formulier");
+const naamInput         = document.getElementById('naam-input');
+const straatInput       = document.getElementById('straat-input');
+const huisnummerInput   = document.getElementById('huisnummer-input');
+const postcodeInput     = document.getElementById('postcode-input');
+const gemeenteInput     = document.getElementById('gemeente-input');
 
 const terugButton = document.getElementById('terug-button');
 
@@ -35,7 +35,6 @@ async function addTotal(total) {
 }
 
 async function stuurBestelling(bestelling) {
-    console.log(bestelling);
     const uri = '/bestellingen';
     const url = new URL(uri, window.location.origin);
     return await fetch(url, {
@@ -46,6 +45,7 @@ async function stuurBestelling(bestelling) {
         let body = response.json();
         if (!response.ok) {
             console.warn('Server response', body);
+            return null;
         } else {
             return body;
         }
@@ -66,19 +66,22 @@ bestelFormulier.addEventListener('submit', async (event) => {
         const biermandje = await getBierMandje();
         const requestBody = {
             'bierIds':      biermandje.map((bier) => bier.id),
-            'naam':         naamInput,
-            'straat':       straatInput,
-            'huisnummer':   huisnummerInput,
-            'postcode':     postcodeInput,
-            'gemeente':     gemeenteInput,
+            'naam':         naamInput.value,
+            'straat':       straatInput.value,
+            'huisnummer':   huisnummerInput.value,
+            'postcode':     postcodeInput.value,
+            'gemeente':     gemeenteInput.value,
         }
         bestelFormulier.reset();
         bestelFormulier.classList.remove('was-validated');
-
         const bestelId = await stuurBestelling(requestBody);
-        sessionStorage.clear();
-        sessionStorage.setItem('bestelId', bestelId);
-        window.location.href = "/succes.html";
+        if (!bestelId || bestelId === 0) {
+            dangerAlert.hidden = false;
+        } else {
+            sessionStorage.clear();
+            sessionStorage.setItem('bestelId', bestelId);
+            window.location.href = "/succes.html";
+        }
     }
 })
 
@@ -90,7 +93,6 @@ terugButton.addEventListener('click', async (event) => {
 
 window.onload = async () => {
     const bierMandje = await getBierMandje();
-    console.log(bierMandje);
     let totaalPrijs = 0;
     bierMandje.forEach(bier => {
         totaalPrijs += bier.prijs;

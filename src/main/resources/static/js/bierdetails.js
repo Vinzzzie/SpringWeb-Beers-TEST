@@ -5,6 +5,7 @@ const addBier = document.getElementById('add-bier');
 const terugButton = document.getElementById('terug-button');
 const navBiermandje = document.getElementById('nav-biermandje');
 const dangerAlert = document.getElementById('danger-alert');
+const infoAlert = document.getElementById('info-alert');
 
 async function voegToe(bier) {
     const biermandje = null===sessionStorage.getItem('biermandje') ? [] :
@@ -12,10 +13,12 @@ async function voegToe(bier) {
     const hasBier = biermandje.some(b => b.id===bier.id);
     if (!hasBier) {
         biermandje.push(bier);
+        infoAlert.hidden = false;
     } else {
         dangerAlert.hidden = false;
     }
     sessionStorage.setItem("biermandje", JSON.stringify(biermandje));
+
 }
 
 async function biermandjeExists() {

@@ -1,5 +1,7 @@
 package be.vdab.biershop.bestellingen;
 
+import be.vdab.biershop.bieren.BierException;
+import be.vdab.biershop.bieren.BierNotFoundException;
 import be.vdab.biershop.bieren.BierRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +23,13 @@ class BestellingService {
             throw new BestellingException("Bestelling niet toegevoegd");
         var bestelRijen = bestellingRepo.insertBestelLijnen(bestellingId, dto.bierIds());
         if (bestelRijen.length==0 || bestelRijen.length!=dto.bierIds().size())
-            throw new BestellingException("Bieren konden niet toegevoegd worden");
+            throw new BestellingException("Bieren konden niet toegevoegd worden aan bestelling");
         var bestelMap = bierRepo.lockBesteldeBieren(dto.bierIds());
         if (bestelMap.isEmpty() || bestelMap.size()!=dto.bierIds().size())
-            throw new BestellingException("Bieren konden niet opgehaald worden");
+            throw new BierNotFoundException("Bieren konden niet opgehaald worden");
         var bierRijen = bierRepo.updateBesteldeBieren(bestelMap);
         if (bierRijen.length==0 || bierRijen.length!=dto.bierIds().size())
-            throw new BestellingException("Bieren konden niet upgedated worden");
+            throw new BierException("Bieren konden niet upgedated worden");
         return bestellingId;
     }
 

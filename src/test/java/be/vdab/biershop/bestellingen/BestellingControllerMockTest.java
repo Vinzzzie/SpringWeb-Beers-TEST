@@ -39,13 +39,13 @@ import static org.mockito.Mockito.when;
 class BestellingControllerMockTest extends AbstractControllerTest {
 
     @MockitoBean
-    private BestellingRepo bestellingRepo;
+    BestellingRepo bestellingRepo;
     @MockitoBean
-    private BierRepo bierRepo;
+    BierRepo bierRepo;
 
-    private String bodyString;
+    String bodyString;
 
-    public BestellingControllerMockTest(MockMvcTester mvc, JdbcClient jdbc) {
+    BestellingControllerMockTest(MockMvcTester mvc, JdbcClient jdbc) {
         super(mvc, jdbc);
         BestellingService bestellingService = new BestellingService(bestellingRepo, bierRepo);
         BestellingController bestellingController = new BestellingController(bestellingService);
@@ -58,84 +58,67 @@ class BestellingControllerMockTest extends AbstractControllerTest {
     }
 
     @Test
-    void addBestelling_bestellingId_zero() throws IOException {
+    void addBestelling_bestellingId_zero() {
         doReturn(0).when(bestellingRepo).insertBestelling(any());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bestelling niet toegevoegd");
+        testExecutionForMessage(HttpStatus.CONFLICT, "Bestelling niet toegevoegd");
     }
 
     @Test
-    void addBestelling_bestelRijen_empty() throws IOException {
+    void addBestelling_bestelRijen_empty() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet toegevoegd worden");
+        testExecutionForMessage(HttpStatus.CONFLICT, "Bieren konden niet toegevoegd worden aan bestelling");
+
     }
 
     @Test
-    void addBestelling_bestelRijen_badSize() throws IOException {
+    void addBestelling_bestelRijen_badSize() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{1,1,1,1}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet toegevoegd worden");
+        testExecutionForMessage(HttpStatus.CONFLICT, "Bieren konden niet toegevoegd worden aan bestelling");
     }
 
     @Test
-    void addBestelling_bestelMap_empty() throws IOException {
+    void addBestelling_bestelMap_empty() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{1,1,1}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
         doReturn(Map.of()).when(bierRepo).lockBesteldeBieren(anyList());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet opgehaald worden");
+        testExecutionForMessage(HttpStatus.NOT_FOUND, "Bieren konden niet opgehaald worden");
+
     }
 
     @Test
-    void addBestelling_bestelMap_wrongSize() throws IOException {
+    void addBestelling_bestelMap_wrongSize() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{1,1,1}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
         doReturn(Map.of(1,1,2,1,3,1,4,1)).when(bierRepo).lockBesteldeBieren(anyList());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet opgehaald worden");
+        testExecutionForMessage(HttpStatus.NOT_FOUND, "Bieren konden niet opgehaald worden");
     }
 
     @Test
-    void addBestelling_bierRijen_empty() throws IOException {
+    void addBestelling_bierRijen_empty() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{1,1,1}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
         doReturn(Map.of(1,1,2,1,3,1)).when(bierRepo).lockBesteldeBieren(anyList());
         doReturn(new int[]{}).when(bierRepo).updateBesteldeBieren(anyMap());
-        var result = mvc.post().uri("/bestellingen")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet upgedated worden");
+        testExecutionForMessage(HttpStatus.CONFLICT, "Bieren konden niet upgedated worden");
+
     }
 
     @Test
-    void addBestelling_bierRijen_wrongSize() throws IOException {
+    void addBestelling_bierRijen_wrongSize() {
         doReturn(1).when(bestellingRepo).insertBestelling(any());
         doReturn(new int[]{1,1,1}).when(bestellingRepo).insertBestelLijnen(anyInt(), anyList());
         doReturn(Map.of(1,1,2,1,3,1)).when(bierRepo).lockBesteldeBieren(anyList());
         doReturn(new int[]{1,1,1,1}).when(bierRepo).updateBesteldeBieren(anyMap());
+        testExecutionForMessage(HttpStatus.CONFLICT, "Bieren konden niet upgedated worden");
+    }
+
+    private void testExecutionForMessage(HttpStatus status, String message) {
         var result = mvc.post().uri("/bestellingen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(bodyString).exchange();
-        assertThat(result).isNotNull().hasStatus(HttpStatus.CONFLICT)
-                .hasBodyTextEqualTo("Bieren konden niet upgedated worden");
+        assertThat(result).isNotNull().hasStatus(status)
+                .hasBodyTextEqualTo(message);
     }
 }

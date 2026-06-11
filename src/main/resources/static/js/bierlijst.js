@@ -6,7 +6,6 @@ const navBiermandje = document.getElementById('nav-biermandje');
 async function fetchBieren(brouwerId) {
     const uri = `/brouwers/${encodeURIComponent(brouwerId)}/bieren`;
     const url = new URL(uri, window.location.origin);
-    console.log(url);
     return await fetch(url, {method: 'GET'})
         .then(response => {
             let body = response.json();

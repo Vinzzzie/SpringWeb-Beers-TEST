@@ -53,7 +53,13 @@
         <tbody id="mandje-tabel-body"></tbody>
     </table>
 </div>
-
+<div class="container mx-5 p-4">
+    <div class="alert alert-danger" role="alert" id="danger-alert" hidden>
+        <div class="d-flex align-items-center justify-content-around gap-3 p-3">
+            <h1>Er is iets mis gegaan met de bestelling</h1>
+        </div>
+    </div>
+</div>
 <div class="container mx-5 p-4">
     <h3 id="bestelling-levering">Levering</h3>
     <form class="needs-validation" id="bestel-formulier" novalidate>
@@ -73,7 +79,7 @@
             <span class="input-group-text" id="bestelling-huisnummer">Huisnummer</span>
             <input class="form-control" type="text" id="huisnummer-input"
                    aria-label="Huisnummer" aria-describedby="bestelling-huisnummer"
-                   required pattern="^[0-9]+[a-zA-Z]?$" />
+                   required pattern="^[0-9]+[a-zA-Z]?$"/>
             <div class="invalid-feedback">Vul een correct huisnummer is</div>
         </div>
         <div class="input-group mb-3">
